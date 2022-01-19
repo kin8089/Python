@@ -1,0 +1,206 @@
+강사
+
+Day 1
+
+
+1989 sunmicro systems
+
+jdk 1.8 download 검색
+https://www.oracle.com/kr/java/technologies/javase/javase8-archive-downloads.html
+
+eclipse jee download 검색
+https://www.eclipse.org/downloads/packages/
+
+
+java언어 특성 :
+1.
+2.
+3.
+4.
+
+[java 환경변수 설정]
+C:\Program Files\Java\jdk1.8.0_202\bin
+
+제어판\시스템 및 보안\시스템 > 고급 시스템 설정
+고급탭> 환경변수 버튼 >
+JAVA_HOME 환경변수, Path 설정
+
+
+1. 소스코드작성 (class 정의 , class 이름과 동일하게 파일저장 .java)
+2. javac로 컴파일 (클래스이름.class 바이트코드  파일 생성)
+3. java로 '클래스이름.class'를 실행
+
+
+
+java언어는 대소문자 구별하는 언어
+키워드는 클래스명, 변수명, 메소드명으로 사용불가, 키워드는 모두 소문자임
+클래스, 메서드, if조건문 블럭, for반복문 블럭등에 종속적인 문장은   {  } 안에 작성
+문장은  ;으로 종료
+
+
+[클래스명, 변수명, 메소드명 Naming 규칙 - 컴파일시에 체크]
+1.영문자로 시작
+2. 숫자, 특수문자 _, $ 허용
+3. 길이 제한 X
+4. 키워드 불가
+5. java.lang.패키지의 클래스이름은 사용 불가
+
+
+데이터 유형
+1. Primitive Data Type : 기본자료형 , =(할당연산자), boolean, byte, short, int, long, float, double, char
+2. Reference Data Type : 참조 자료형, .(소유연산자) , 객체(class, 배열, interface)
+
+컴파일 언어는 정적타입언어로서 데이터를 메모리에 저장하고 참조하기 위한 변수 선언시 반드시 타입 선언을 해야 함
+타입 변수이름;
+타입 변수이름 = 초기값;
+
+
+boolean : 논리값 저장 타입, 1byte할당, 정수와 호환되지 않으므로 true, false로만 값을 사용해야 합니다.
+byte : 정수값 저장 타입, 1byte할당, binary로 저장, -128~127 유효범위값 저장, 
+short : 정수값 저장 타입,2byte할당,  binary로 저장, -2^15~2^15-1 (-327698~32767) 유효범위값 저장,
+char : 하나의 문자  저장 타입, unicode 지원, 2byte할당 0~2^16-1(0~65535) 유효범위값 저장
+         '0'-ascii 48 'a'-ascii 97  'A'-ascii 65
+int : 정수값 저장 타입,4byte할당,  binary로 저장, -2^31~2^31-1 (-2147483648~2147483647) 유효범위값 저장,
+long : 정수값 저장 타입,8byte할당,  binary로 저장, -2^63~2^63-1 유효범위값 저장, 8byte binary로 만들도록 값L, 값l함께 선언
+float :  실수값 저장 타입,4byte할당, 부동소수점 형식, 지수부 가수부 형식으로 저장, 실수값F, 실수값f 저장
+double :  실수값 저장 타입,8byte할당, 부동소수점 형식, 지수부 가수부 형식으로 저장,  실수값D, 실수값d, 실수값 저장
+
+10진수,  8진수, 16진수 정수표현방식으로 저장 가능, 출력은 10진수로 출력됨
+
+ReferenceType : 클래스, 배열, 인터페이스
+String st = new String("Hello") ; //객체 생성, heap 메모리에 생성
+String s1 = "Hello"; //문자열 객체 생성, String Pool 메모리에 생성
+
+https://docs.oracle.com/javase/8/docs/
+
+형변환###################################
+promotion : 작은타입이 큰 타입으로 자동 형변환
+예)int a1 = 5
+    float f1 = a1;
+casting : 큰 타입에서 작은타입으로 형변환은 명시적으로 cast연산자를 이용해서 형변환해야 함
+    float f1 = 5.15f;
+    int a1 = f1; //error
+    
+boolean타입은 정수타입(byte, int, short, long)과 promotion도 casting도 불가
+byte와 char타입간에는 casting만 가능
+short와 char타입간에는 casting만 가능
+boolean타입은 정수타입과 호환 안됨
+
+연산자#######################################################################
+단항연산자 : operand 1, operator 1
+sign(+, -), 1의 보수(~), 증감연산자 (++, --), not연산자 (!) , ()
+
+이항연산자 : operand 2, operator 1 
+ 산술(+, -, /, *, %) : 정수에 대한 산술연산의 결과는 정수
+ 비교(>, >=, ==, !=, <, <=) : 결과는 boolean
+ 비트( &, |, ^) : binary값으로 연산처리 , 결과는 정수
+ 논리(&&, ||) : 조건식 && 조건식, 조건식 || 조건식,  결과는 boolean
+ shift (<<, >>, >>>) : left shift, right shift, unsigned right shift
+ left shift 은 왼쪽으로 bit를 이동시키고 오른쪽 bit는 0으로 채움, X<<Y = X*2^y과 동일
+ right shift는 오른쪽으로 bit를 이동시키고 왼쪽 bit는 sign bit로 채움, X>>Y = X/2^y과 동일, 양수일때 양수결과, 음수일때 음수 결과 반환
+ unsigned right shift 는 오른쪽으로 bit를 이동시키고 왼쪽 bit는  0으로 채움, 결과는 항상 양수
+할당연산자 : +=, -=, /=, %=,....
+
+삼항연산자 :  operand 3, operator 1
+조건표현식 항 ? true일때 항 : false일때 항
+
+#하나의 연산식내에서 가장 큰 타입으로 promotion 형변환이 일어남
+
+조건문 ######################################################################
+if  조건식 {
+   문장;  //true일때
+   ...
+}
+
+
+if  조건식 {
+   문장;  //true일때
+   ...
+}else {
+   문장; //false일때 
+   ...
+}
+
+#다중if문 
+if  조건식1 {
+   문장;  //조건식1이 true일때
+   ...
+}else if 조건식2 {
+   문장; // 조건식1이 false이고 조건식2가 true일때
+   ...
+}else if 조건식3 {
+   문장; // 조건식1과  조건식2이 false이고 조건식3가 true일때
+   ...
+} else {
+  문장;  //위의 모든 조건식이 false일때 
+   ...
+}
+
+#nested if문
+ if  조건식 {
+      if  조건식 {
+         문장;  //true일때
+          ...
+      }else {
+         문장; //false일때 
+           ...
+     }  
+}else {
+   문장; //false일때 
+   ...
+}
+  
+EX1> 사용자로부터 1~100사이의 정수를 입력받습니다.
+        짝수/ 홀수 출력
+import java.util.Scanner;
+
+public class InputEx1 {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		System.out.print("1~100사이의 정수  입력 :" );
+        int num = input.nextInt();
+        //짝수/ 홀수 check출력
+	}
+
+}
+      
+
+EX2> 사용자로부터 두개의 정수와 하나의 연산자(*, /, +, -) 하나를 입력받습니다.
+       두 정수와 연산자를 적용한 결과 출력
+
+실행 예시 : 정수1 입력 : 3
+             정수2 입력 : 5
+             연산자(*, /, //, +, -, %, **) 입력 : *
+              3 * 5 = 15
+
+문자열을 입력 :
+ Scanner input = new Scanner(System.in);
+ System.out.print("연산자(+,-, *, /) :" );
+ String op = input.next();
+ if (op.equals( "+" ) ) {
+    ...
+ }
+#다중 if문은 첫번째 조건문부터 순차적으로 체크해서 True이면 해당 블럭문을 수행하고 남은 조건을 수행하지 않습니다.
+
+EX3> 점수(0~100)를 입력받습니다.
+       입력받은 점수가 90~100이면 A
+        89~80이면 B, 79~70이면 C, 69~60이면 D, 59~0은 F
+Scanner input = new Scanner(System.in);
+while(true) {   
+      System.out.print("1~100사이의 정수  입력 :" );
+       int num = input.nextInt();
+       if (num>100)   {
+         continue;
+       }else if ~
+ }
+       
+EX4> 년도를 입력받아서 윤년인지 평년인지 출력
+         윤년은 4로 나누어서 나머지가 0이면 윤년
+               (100로 나누어서 나머지가 0이면 평년, 
+                400로 나누어서 나머지가 0이면 윤년)
+        4로 나누어서 나머지가 0이 아니면 평년
+
+
+EX5> 3개의 과목 점수(0~100점)를 입력 받아 총점과 평균을 출력하고 
+평균이 60점이상이면 합격, 60점 미만이면 불합격이라고 출력하세요
