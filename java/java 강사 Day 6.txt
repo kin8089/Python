@@ -1,0 +1,837 @@
+java.lang.Throwable<----Error            <----
+                            <----Exception     <----
+
+예외 분류 :
+1. unchecked exception
+2. checked exception - 컴파일시 io, db연동, network
+
+예외 다루기 :
+1. handle  - try catch finally
+2. declare - throws
+
+예외 의도적으로 발생시켜야할때 - throw
+
+ex)
+메서드 선언() throws 예외클래스명 { ....... }
+throw new 예외클래스(메시지, 속성값..);
+
+try {
+     예외 발생 가능성이 존재하는 코드 ;
+     코드;
+    }catch (예외클래스명  객체) {  // 0 or more 선언 , 
+      //여러 예외클래스를 catch하는 경우 계층구조의 역순으로 catch블럭을 정의합니다.
+      예외처리 코드;
+    }finally {   // 0 or 1 선언
+      // 예외 발생과 무관하게 무조건 수행
+      // 사용했었던 자원을 정리  ( stream클래스 close(),  Connection close(), null할당)
+    }
+
+
+사용자 정의 예외 클래스는  예외 처리할 내용관 연관성이 높은  Exception종류 클래스를 상속받습니다.
+사용자 정의 예외 클래스는 멤버필드, 생성자, 메서드 정의할 수 있습니다.
+
+ex) //특정 범위를 벗어나는 값에 대해서 예외 발생시키거나 처리하기 위해 정의
+public class  RangeBoundsException extends Exception {  
+     private double last_tall = 161;
+     public RangeBoundsException (String message){
+               super(message);
+      }
+     public double getLast_tall(){
+            return last_tall;
+    }
+}
+
+double[]  middle_talls = new double[] { 152,155.5,148.5,192,160,162,165,168,115,159,157,170,171};
+
+올해 중학생 키 입력값으로부터 유효범위를 체크해서 130~180를 벗어나면 예외 발생시킵니다.
+예외 발생시킬때 메시지는 "유효범위보다 낮습니다." , "유효범위보다 높습니다." 를 설정합니다
+예외가 발생되면 예외클래스에 저장된 작년도 키값으로 보정합니다.
+올해의 중학생 평균 키를 출력합니다.
+
+class ExceptionTest{
+
+public void checkTall(double tall){
+//유효범위를 체크해서 130~180를 벗어나면 예외 RangeBoundsException 발생시킵니다.
+//예외 발생시킬때 메시지는 "유효범위보다 낮습니다." , "유효범위보다 높습니다." 를 설정
+}
+
+public double averageTall(double[] talls){
+ 올해의 중학생 평균 키를 계산해서 리턴
+}
+
+public static void main(String[] args){
+double[]  middle_talls = new double[] { 152,155.5,148.5,192,160,162,165,168,115,159,157,170,171};
+
+}
+}
+
+
+
+
+public class ExceptionTest  {
+	public void checkTall(double tall) throws RangeBoundsException{
+		 if (tall>180 ) 
+			 throw new RangeBoundsException("유효범위보다 높습니다.");
+		 if (tall<130)
+			 throw new RangeBoundsException("유효범위보다 낮습니다.");
+		}
+
+	public double averageTall(double[] talls){
+		 double total = 0;
+		 for (double t : talls) {
+			 total += t;
+		 }
+		 return total/talls.length;
+		}
+
+	public static void main(String[] args){
+		double[]  middle_talls = new double[] { 152,155.5,148.5,192,160,162,165,168,115,159,157,170,171};
+		ExceptionTest test = new ExceptionTest();
+		for (int i=0;i<middle_talls.length;i++) {
+			try {
+				test.checkTall(middle_talls[i]);
+			}catch(RangeBoundsException e) {
+				System.err.println(e.getMessage());
+				middle_talls[i] = e.getLast_tall();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}//for end
+		System.out.printf("올해의 중학생 평균 키 : %1$.2f" ,test.averageTall(middle_talls));
+	}
+}
+
+#######################################################################
+클래스 내부에 클래스를 정의 할 수 있습니다.
+Inner Member Class , 
+Inner Static Class  : Inner Member Class가 static 멤버 또는 static 메서드를 가지는 경우
+Inner Local Class
+Annoymous Class : 익명 클래스, 생성과 동시에 구현되며, 1회성 실행되는 클래스 
+
+[Inner Member Class  구조]
+class Outer {
+  private int member;
+  class Inner {
+      private int member;
+      public void  innerMethod(){
+      ...
+     }
+  }
+  public void outerMethod(){
+  ...
+   }
+}
+
+#컴파일하면 Outer.class와 Outer$Inner.class가 생성되며, 코드에서는 Outer.Inner로 선언합니다.
+#Inner Member Class는 Outerclass의 멤버이므로 private , protected 선언 가능
+
+class Outer {
+  private int member=1;
+  class Inner {
+      private int member=100;
+      public void  innerMethod(){
+         System.out.println(member);// 
+         System.out.println(Outer.this.member);
+     }
+  }
+  public void outerMethod(){
+      Inner  inn = new Inner();
+      inn.innerMethod();
+   }
+}
+public class InnerClassEx {
+	public static void main(String[] args) {
+		//Inner클래스 객체 생성 방법 1
+		Outer outer = new Outer();
+		Outer.Inner inner = outer.new Inner();  
+		inner.innerMethod();
+		outer.outerMethod();
+		
+		//Inner클래스 객체 생성 방법 2
+		Outer.Inner inner2 = new Outer().new Inner(); 
+		inner2.innerMethod();
+	}
+
+}
+
+
+import java.awt.Frame;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Button;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class MyFrame extends Frame{
+	Button b1, b2, b3;
+	public MyFrame() {
+		setTitle("MyFrame");
+		setSize(300, 200);
+		setBackground(Color.orange);
+		setLayout(new FlowLayout());
+		b1 = new Button("red");
+		b2 = new Button("green");
+		b3 = new Button("blue");
+		add(b1);
+		add(b2);
+		add(b3);
+		b1.addActionListener(new ButtonEvent());
+		b2.addActionListener(new ButtonEvent());
+		b3.addActionListener(new ButtonEvent());
+		setVisible(true);
+	}
+	class ButtonEvent implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			 if(e.getSource()==b1) {
+				 setBackground(Color.red);
+			 }else if(e.getSource()==b2) {
+				 setBackground(Color.green);
+			 }else if(e.getSource()==b3) {
+				 setBackground(Color.blue);
+			 }			
+		}		
+	}
+	
+
+	public static void main(String[] args) {
+		new MyFrame();
+
+	}
+
+}
+
+
+class Outer2 {
+  private int member=1;
+    static class Inner2 {
+      static int member=100;
+      public void  innerMethod(){
+         
+     }
+  }
+  public void outerMethod(){
+      
+   }
+}
+
+
+
+class Outer2 {
+  private int member=1;
+    static class Inner2 {
+      int member=100;
+      public static void  innerMethod(){
+         
+     }
+  }
+  public void outerMethod(){
+      
+   }
+}
+
+
+ class Outer2 {
+  private int member=1;
+    static class Inner2 {
+      static int member=100;
+      public static void innerMethod(){
+         System.out.println(member);
+     }
+  }
+  public void outerMethod(){      
+   }
+}
+ public class InnerClassEx2 {
+	public static void main(String[] args) {		 
+		System.out.println(Outer2.Inner2.member);
+		Outer2.Inner2.innerMethod();		 
+	}
+}
+
+
+#Local Inner Class는 메서드내에 정의된 클래스로서 정의된 메서드 내부에서만 객체 생성해서 사용할 수 있음
+ class Outer3 {
+  private int member=1;
+  public void outerMethod(){  
+	  int local = 0;
+	  class Inner  {  //Local Inner class
+	     int member=100;
+	     public  void innerMethod(){
+	        System.out.println(member);
+	        System.out.println(local);
+	        System.out.println(Outer3.this.member);
+	     }
+	  }
+	  Inner inn = new Inner();
+	  inn.innerMethod();
+   }//method end
+  
+}
+ public class InnerClassEx3 {
+	public static void main(String[] args) {		 
+		 Outer3 outer = new Outer3();
+		 outer.outerMethod();
+	}
+}
+
+
+#익명 클래스
+ class Outer4 {
+  private int member=1;
+  Animal cat = new Animal() { //클래스 선언 없이, 생성과 동시에 body 구현
+	@Override
+	public void move() {		 
+		System.out.println("살금 살금, 점프");
+	}	  
+  };
+  public void outerMethod(){  
+	  cat.move();
+  }//method end  
+}
+ public class InnerClassEx4 {
+	public static void main(String[] args) {		 
+		Outer4 outer = new Outer4();
+		 outer.outerMethod();
+	}
+}
+
+
+
+import java.awt.Frame;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Button;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+public class MyFrame extends Frame{
+	Button b1, b2, b3;
+	public MyFrame() {
+		setTitle("MyFrame");
+		setSize(300, 200);
+		setBackground(Color.orange);
+		setLayout(new FlowLayout());
+		b1 = new Button("red");
+		b2 = new Button("green");
+		b3 = new Button("blue");
+		add(b1);
+		add(b2);
+		add(b3);
+		b1.addActionListener(new ButtonEvent());
+		b2.addActionListener(new ButtonEvent());
+		b3.addActionListener(new ButtonEvent());
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				setVisible(false);
+				System.exit(0);
+			}
+		});
+		setVisible(true);
+	}
+	class ButtonEvent implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			 if(e.getSource()==b1) {
+				 setBackground(Color.red);
+			 }else if(e.getSource()==b2) {
+				 setBackground(Color.green);
+			 }else if(e.getSource()==b3) {
+				 setBackground(Color.blue);
+			 }			
+		}		
+	}
+	
+
+	public static void main(String[] args) {
+		new MyFrame();
+
+	}
+
+}
+
+
+#####################################################################################
+package workshop.entity;
+
+public class Book {
+	private String title;
+	private int price;
+ 
+	public Book(String title, int price) {		 
+		this.title = title;
+		this.price = price;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public int getPrice() {
+		return price;
+	}
+	@Override
+	public String toString() {		 
+		return "[제목]"+getTitle()+"\t"+"[가격]"+getPrice();
+	}
+}
+
+package workshop.entity;
+
+public class Magazine extends Book{
+	private String category;
+	private String description;
+	public Magazine(String title, int price, String category, String description) {
+		super(title, price);
+		this.category = category;
+		this.description = description;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public String getDescription() {
+		return description;
+	}
+	@Override
+	public String toString() {
+		return "[제목] "+getTitle()+"\t[분류] "+getCategory()+
+				"[가격] "+getPrice()+"\t[비고] "+getDescription();
+    }
+}
+
+
+package workshop.entity;
+
+public class Novel extends Book{
+	 private String author;
+	 public Novel(String title, int price, String author) {
+		 super(title,price);	
+			this.author = author;
+	}
+	 public String getAuthor() {
+			return author;
+		}
+	 @Override
+	 public String toString() {
+	 	return "[제목] "+getTitle()+"\t[저자] "+getAuthor()+
+	 			"\t[가격] "+getPrice() ;
+	 }	 
+}
+
+
+
+package workshop.biz;
+
+import workshop.entity.Magazine;
+import workshop.entity.Novel;
+
+public class BookBiz {
+	private Magazine[] magazines;
+	private Novel[] novels;
+	public BookBiz() {
+		magazines = new Magazine[] {
+				new Magazine("Cooking Light", 15000, "living, cooking", "America Cook"),
+				new Magazine("Auto Bild", 16000, "science, car", "Germany Car")
+		};
+		novels = new Novel[] {
+				new Novel("The Confession", 10500, "Grisham, John"),
+				new Novel("Les Miserables", 17500, "Hugo, Victor"),
+				new Novel("Breakthrough", 47200, "ifill, Gwen"),
+				new Novel("The Racketeer", 38000, "Grisham, John"),
+		};
+	}
+	public void printAllBooks() {
+		int no = 1;
+		for(Magazine m : magazines)
+			System.out.println(no++ +"." +m.toString());
+		for(Novel n : novels)
+			System.out.println(no++ +"." +n.toString());
+	}
+	public void printAllMagazines() {
+		int no = 1;
+		for(Magazine m : magazines)
+			System.out.println(no++ +"." +m.toString());
+	}
+	public void printAllNovels() {
+		int no = 1;
+		for(Novel n : novels)
+			System.out.println(no++ +"."+n.toString());
+	}
+	private int calculateOneYearSubscriptionPrice(int price) {
+		return price*12;
+	}
+	public void printMagazineOneYearSubscription() {
+		int no = 1;
+		for(Magazine m : magazines)
+			System.out.println(no+++"." + m.getTitle() +" : " 
+		                 + calculateOneYearSubscriptionPrice(m.getPrice()) +"원");
+	}
+	public void searchNovelByAuthor(String author) {		
+		int no = 1;
+		for(Novel n : novels) {
+			if (n.getAuthor().equals(author))
+			System.out.println(no+++"." +n.toString());
+		}
+	}
+	
+	public void searchNovelByPrice(int minPrice, int maxPrice) {
+		int no = 1;
+		for(Novel n : novels) {
+			if (n.getPrice()>=minPrice && n.getPrice()<=maxPrice)
+			System.out.println(no+++"." +n.toString());
+		}
+	}
+	
+}
+
+
+
+package workshop.util;
+
+import java.util.Scanner;
+
+public class BookUtil {
+	public static String getUserInput() {
+		Scanner input = new Scanner(System.in);
+		return input.nextLine();
+	}
+
+	public static void printHead() {
+		System.out.println("-------------------------------도서 정보 ----------------------------------");
+	}
+
+	public static void printTail() {
+		System.out.println("----------------------------------------------------------------------------");
+	}
+}
+
+
+package workshop.test;
+
+import  workshop.biz.BookBiz;
+import  workshop.util.BookUtil;
+
+public class BookTest {
+
+	public static void main(String[] args) {
+		BookBiz biz = new BookBiz();
+		int menu = 0;
+		do {
+		 printMenu();
+		 System.out.print("## 메뉴 입력 :");
+		 menu = Integer.parseInt(BookUtil.getUserInput());
+		 switch(menu) {
+		 case 1 :  
+			 BookUtil.printHead();
+			 biz.printAllBooks();
+			 BookUtil.printTail(); break;
+		 case 2 :  
+			 BookUtil.printHead();
+			 biz.printAllMagazines();
+			 BookUtil.printTail();break;
+			 
+		 case 3 :  
+			 BookUtil.printHead();
+			 biz.printAllNovels();
+			 BookUtil.printTail();break;
+		 case 4 :  
+			 System.out.println("------------------------");
+			 biz.printMagazineOneYearSubscription(); 
+			 System.out.println("------------------------");
+			 break;
+		 case 5 :  
+			 System.out.print("> 검색할 저자명을 입력하세요 :");
+			 String author = BookUtil.getUserInput();
+			 BookUtil.printHead();
+			 biz.searchNovelByAuthor(author.trim());
+			 BookUtil.printTail();
+			 break;
+		 case 6 :  
+			 System.out.print("> 검색할 소설 가격의 최소값을 입력하세요 :");
+			 int minPrice = Integer.parseInt(BookUtil.getUserInput());
+			 System.out.print("> 검색할 소설 가격의 최대값을 입력하세요 :");
+			 int maxPrice = Integer.parseInt(BookUtil.getUserInput());
+			 BookUtil.printHead();
+			 biz.searchNovelByPrice(minPrice, maxPrice);
+			 BookUtil.printTail();
+			 break;	 
+		 case 9 :
+			 System.out.println("------------------------");
+			 System.out.println("프로그램을 종료합니다. Bye~");
+			 System.out.println("------------------------");
+			 System.exit(0);
+		 }
+		}while(menu!=9);
+
+	}
+	public static void printMenu() {
+		System.out.println("=== <<도서 정보 프로그램>> ===");
+		System.out.println("1.전체 도서 정보 조회");
+		System.out.println("2.전체 잡지 조회");
+		System.out.println("3.전체 소설 조회");
+		System.out.println("4.잡지 연간 구독료 조회");
+		System.out.println("5.소설 저자명 검색");
+		System.out.println("6.소설 가격 검색(최소값~최대값)");
+		System.out.println("9.시스템 종료");
+		System.out.println("========================");
+	}
+
+}
+
+
+#########################################################################################
+package workshop.entity;
+
+ 
+
+public abstract class Student {
+	private String studentNo;
+	private String studentName;
+	private int[] gradeArr;
+
+	public Student(String studentNo, String studentName, int[] gradeArr) {		 
+		this.studentNo = studentNo;
+		this.studentName = studentName;
+		this.gradeArr = gradeArr;
+	}
+
+	public String getStudentNo() {
+		return studentNo;
+	}
+
+	public void setStudentNo(String studentNo) {
+		this.studentNo = studentNo;
+	}
+
+	public String getStudentName() {
+		return studentName;
+	}
+
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
+	}
+
+	public int[] getGradeArr() {
+		return gradeArr;
+	}
+
+	public void setGradeArr(int[] gradeArr) {
+		this.gradeArr = gradeArr;
+	}
+	
+	public int getTotal() {
+		int total =0;
+		for(int jumsu : gradeArr)
+			total +=  jumsu;
+		return total;
+	}
+	public double getAverage() {
+		 
+		return getTotal()/gradeArr.length;
+	}
+	public abstract boolean isPass();
+
+	@Override
+	public String toString() {		     		
+		return  studentNo + " " + studentName;
+	}
+
+}
+
+ 
+
+package workshop.entity;
+
+public class CareerStudent extends Student{
+   private int careerYears;
+
+public CareerStudent(String studentNo, String studentName, int[] gradeArr, int careerYears) {
+	super(studentNo, studentName, gradeArr);
+	this.careerYears = careerYears;
+}
+
+public int getCareerYears() {
+	return careerYears;
+}
+
+public void setCareerYears(int careerYears) {
+	this.careerYears = careerYears;
+}
+
+@Override
+public boolean isPass() {
+	boolean result = false;
+	if(getAverage()>=80) {
+		result = true;
+	}
+	return result;
+}
+}
+
+
+
+package workshop.entity;
+
+public class NewStudent  extends Student{
+   private boolean internYn;
+
+public NewStudent(String studentNo, String studentName, int[] gradeArr, boolean internYn) {
+	super(studentNo, studentName, gradeArr);
+	this.internYn = internYn;
+}
+
+public boolean isInternYn() {
+	return internYn;
+}
+
+public void setInternYn(boolean internYn) {
+	this.internYn = internYn;
+}
+
+@Override
+public boolean isPass() {
+	boolean result = false;
+	if(getAverage()>=70) {
+		result = true;
+	}
+	return result;
+}
+   
+}
+
+
+
+package workshop.biz;
+
+public interface IGradeManager {
+    public static final int PRINT_ALL = 0;
+    public static final int PRINT_PASS = 1;
+    public static final int PRINT_FAIL = 2;
+    
+    public void printStudents(int printType);
+}
+
+
+
+
+package workshop.biz;
+
+import workshop.entity.CareerStudent;
+import workshop.entity.NewStudent;
+import workshop.entity.Student;
+
+public class GradeManager implements IGradeManager{
+	private Student[] students = new Student[30];
+	private int cnt = 0;
+	
+	public GradeManager() {
+		students[cnt++] = new NewStudent("10001", "kim" , new int[] {74,70,80}, false);
+		students[cnt++] = new NewStudent("10002", "park" , new int[] {90,90,100}, false);
+		students[cnt++] = new NewStudent("10003", "lee" , new int[] {70,62,60}, false);
+		students[cnt++] = new CareerStudent("20001", "han" , new int[] {96,85,93},1);
+		students[cnt++] = new CareerStudent("20002", "nam" , new int[] {90,80,70},2);
+		students[cnt++] = new CareerStudent("20003", "choi" , new int[] {70,70,90},1);
+	}
+
+
+	@Override
+	public void printStudents(int printType) {
+		switch(printType) {
+		case PRINT_ALL : 
+			for(int i=0;i<cnt; i++  ) {
+				System.out.print(students[i]);
+				if(students[i] instanceof NewStudent) {
+					System.out.print("  신입  ");
+					if (((NewStudent)students[i]).isInternYn()) {
+						System.out.print("  Y       ");
+					}else {
+						System.out.print("  N       ");
+					}
+					
+				}else {
+					System.out.print("  경력        ");
+					System.out.print("  "+ ((CareerStudent)students[i]).getCareerYears());
+				}
+				for (int jumsu : students[i].getGradeArr())  
+					System.out.print(" "+jumsu+" ");
+				System.out.print(" "+students[i].getTotal()+" ");
+				System.out.print(" "+students[i].getAverage()+" ");
+				if(students[i].isPass()) {
+					System.out.print(" 합격\n");
+				}else {
+					System.out.print(" 불합격\n");
+				}				
+			}
+			break;
+		case PRINT_PASS : 
+			for(int i=0;i<cnt; i++  ) {				
+				if(students[i].isPass()) {
+					System.out.print(students[i]);
+				if(students[i] instanceof NewStudent) {
+					System.out.print("  신입  ");
+					if (((NewStudent)students[i]).isInternYn()) {
+						System.out.print("  Y       ");
+					}else {
+						System.out.print("  N       ");
+					}					
+				}else {
+					System.out.print("  경력        ");
+					System.out.print("  "+ ((CareerStudent)students[i]).getCareerYears());
+				}
+				for (int jumsu : students[i].getGradeArr())  
+					System.out.print(" "+jumsu+" ");
+				System.out.print(" "+students[i].getTotal()+" ");
+				System.out.print(" "+students[i].getAverage()+" ");				 
+				System.out.print(" 합격\n");
+				} 		
+			}
+		 
+			break;
+		case PRINT_FAIL : 
+			for(int i=0;i<cnt; i++  ) {				
+				if(!students[i].isPass()) {
+					System.out.print(students[i]);
+				if(students[i] instanceof NewStudent) {
+					System.out.print("  신입  ");
+					if (((NewStudent)students[i]).isInternYn()) {
+						System.out.print("  Y       ");
+					}else {
+						System.out.print("  N       ");
+					}					
+				}else {
+					System.out.print("  경력        ");
+					System.out.print("  "+ ((CareerStudent)students[i]).getCareerYears());
+				}
+				for (int jumsu : students[i].getGradeArr())  
+					System.out.print(" "+jumsu+" ");
+				System.out.print(" "+students[i].getTotal()+" ");
+				System.out.print(" "+students[i].getAverage()+" ");				 
+				System.out.print(" 합격\n");
+				} 		
+			}
+			break;
+			
+		}
+		
+	}
+	
+
+}
+
+
+
+
+
+
+package workshop.util;
+
+import java.util.Scanner;
+
+public class CommonUtil {
+	public static String getUserInput() {
+		Scanner input = new Scanner(System.in);
+		return input.nextLine();
+	}
+	public static double round(double input) {
+		return Double.parseDouble(String.format("%.1f", input));
+	}
+}

@@ -1,0 +1,784 @@
+import java.util.Random;
+
+public class Array {
+	private String title;
+	private int row;
+	private int col;
+	private int[][] array;
+	
+	public Array(String title, int row, int col) {		
+		this.title = title;
+		this.row = row;
+		this.col = col;
+		array = new int[row][col];
+	}
+	
+	public int getRow() {
+		return row;
+	}
+
+	public void setRow(int row) {
+		this.row = row;
+	}
+	
+	public int getCol() {
+		return col;
+	}
+
+	public void setCol(int col) {
+		this.col = col;
+	}
+
+	public int[][] getArray() {
+		return array;
+	}
+
+	public void setArray(int[][] array) {
+		this.array = array;
+	}
+
+	public void makeArrayData() {
+		for(int r=0;r<row;r++) {
+			for(int c=0;c<col;c++) {
+				array[r][c] =getRandomNumber();
+			}
+		}
+	}
+	
+	private int getRandomNumber() {
+		Random r = new Random();
+		return r.nextInt(12)+1;
+	}
+	
+	public void printArray() {
+		System.out.println("## "+title+" 출력");
+		for(int r=0;r<row;r++) {
+			for(int c=0;c<col;c++) {
+				System.out.print(array[r][c]+" ") ;
+			}
+			System.out.println();
+		}
+	}
+	
+	public void findMatchNumber(Array src, Array desc) {
+		int count = 0;
+		System.out.print("##일치하는 숫자:");
+		for(int r=0;r<row;r++) {
+			for(int c=0;c<col;c++) {
+				if(src.getArray()[r][c] == desc.getArray()[r][c]) {
+					System.out.printf("[%1$d][%2$d]=%3$d,",r, c, src.getArray()[r][c]);
+					count+=1;
+				}
+			}
+		}//outer for end
+		System.out.println("\n##일치하는 숫자 갯수 :"+count);
+	}
+
+}
+
+
+
+
+public class ArrayTest {
+
+	public static void main(String[] args) {
+		Array src = new Array("첫번째 Array", 3, 4);
+		Array dest = new Array("두번째 Array", 3, 4);
+		src.makeArrayData();
+		dest.makeArrayData();
+		src.printArray();
+		dest.printArray();
+		src.findMatchNumber(src, dest);
+	}
+
+}
+
+
+
+#################################################################################
+
+public class Account {
+	private int balance;
+	 
+	public Account(int balance) {		 
+		this.balance = balance;
+	}
+	
+	public int getBalance() {
+		return balance;
+	}
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+	public boolean deposit(int amount) {
+		boolean flag = false;
+		if (amount> 0) {
+			balance += amount;
+			flag = true;
+		}
+		return flag;
+	}
+	public boolean withdraw(int amount) {
+		boolean flag = false;
+		if (amount> 0 && balance > amount) {
+			balance -= amount;
+			flag = true;
+		}
+		return flag;
+	}
+}
+
+
+
+
+public class Customer {
+	private String ssn;
+	private String name;
+	private Account account;
+	
+	public Customer(String ssn, String name) {	
+		this.ssn = ssn;
+		this.name = name;
+	}
+	public String getSsn() {
+		return ssn;
+	}
+	public void setSsn(String ssn) {
+		this.ssn = ssn;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Account getAccount() {
+		return account;
+	}
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+    public String toString() {
+		return  name+"님의 현재 잔액: "+account.getBalance()+"원";
+	}
+
+}
+
+
+
+
+
+
+public class BankingTest {
+
+	public static void main(String[] args) {
+		 Account h_account = new Account(10000);
+		 Customer hong = new Customer("0001", "홍길동");
+		 System.out.println(hong);
+		 if (h_account.deposit(1000)) {
+		    System.out.println("1000원 입금:입금성공");
+		 }else {
+			  System.out.println("1000원 입금:입금실패"); 
+		  }
+		 
+		 System.out.println(hong.toString());
+		 if (h_account.withdraw(5000)) {
+			 System.out.println("5000원 출금:출금성공");
+		  }else {
+			  System.out.println("5000원 출금:출금실패"); 
+		  }
+		 System.out.println(hong );
+		 if (h_account.withdraw(7000)) {
+			 System.out.println("7000원 출금:입금성공");
+		  }else {
+			  System.out.println("7000원 출금:출금실패"); 
+		  }
+		 System.out.println(hong ); 
+	}
+
+}
+
+################################################################################
+#생성자 메서드 overload(중복 정의)가능
+#생성자 메서드내에서 클래스내에 다른 생성자 메서드를 호출할 수 있습니다.
+생성자 메서드내에서 클래스내에 다른 생성자 메서드를 호출할때는 생성자이름 대신에 this()로 호출합니다.
+생성자 메서드내에서 클래스내에 다른 생성자 메서드를   한번만 호출 가능합니다.
+생성자 메서드내에서 클래스내에 다른 생성자 메서드 호출은 첫 문장으로만 호출 가능합니다.
+
+
+public class Test {
+	public Test() {
+		System.out.println("Test() called");
+	}
+	public Test(int a) {
+		System.out.println("Test(int) called");
+	}
+	public Test(int a, int b) {	
+		this(a);
+		//this();
+		System.out.println("Test(int, int) called");
+		//this(a);
+	}	   
+
+	public static void main(String[] args) {
+		//Test t1 = new Test();
+		//Test t2 = new Test(1);
+		Test t3 = new Test(1, 100);
+	}
+
+}
+
+
+Access Modifier###################################################################
+
+package pkg1;
+
+public class Parent {
+   // public String name ="parent";
+	// protected String name ="parent";
+	//String name ="parent"; //default access modifier
+	private String name ="parent";
+	
+	public String  getName() {		
+		//권한 체크, 유효성 체크등 
+		return name;
+	}	
+	public void setName(String name) {
+		//권한 체크, 유효성 체크등 
+		this.name = name;
+	}
+}
+
+
+
+package pkg2;
+
+import pkg1.Parent;
+
+public class Other {
+   public void test() {
+	   Parent p = new Parent();
+	   System.out.println(p.name);
+   }
+   public static void main(String[] args) {
+	   Other o = new Other();
+	   o.test();
+   }
+}
+
+
+package pkg2;
+
+import pkg1.Parent;
+
+public class Child extends Parent{
+	public void test() {
+		System.out.println(name);
+	}
+	
+	public static void main(String[] args) {
+		Child o = new Child();
+		o.test();
+	   }
+}
+
+
+
+
+
+package pkg1; 
+
+public class Other {
+   public void test() {
+	   Parent p = new Parent();
+	   System.out.println(p.name);
+   }
+   public static void main(String[] args) {
+	   Other o = new Other();
+	   o.test();
+   }
+}
+
+
+
+
+package pkg1;
+ 
+public class Child extends Parent{
+	public void test() {
+		System.out.println(name);
+	} 
+}
+
+######static 메서드###############################################################
+static 메서드는 static 변수를 처리(process)하는 기능을 수행하는 목적
+static 메서드는 객체 생성없이 클래스이름으로 호출 가능
+static 메서드에서는 static 클래스변수 또는 static 메서드만 사용, 호출 가능 (non-static은 access, call 불가)
+non-static  메서드에서는  static 변수와 메서드, 인스턴스변수와 메서드  모두 사용 및  호출 가능
+
+
+
+public class StaticTest {
+    public int num;
+    public static int snum;
+    
+    public void method() {
+    	System.out.println(num);
+    	System.out.println(snum);
+    }
+    public void method2() {
+    	 method();
+    	 staticMethod();
+    }
+    public static void staticMethod() {
+    	//System.out.println(num);
+    	System.out.println(snum);
+    }
+    
+    public static void staticMethod2() {
+    	//method();
+   	    staticMethod();
+    }
+    
+}
+
+#######################################################################################
+package workshop.account;
+
+public class Account {
+	private String custId;
+	private String custName;
+	private String accountNumber;
+	private int balance;
+	
+	public Account(String custId, String custName, String accountNumber, int balance) {
+		this.custId = custId;
+		this.custName = custName;
+		this.accountNumber = accountNumber;
+		if (balance < 1) {
+			System.out.println("잔액 오류입니다 :" + balance + "원");
+			System.exit(0);//Standalone application종료
+		} else {
+			this.balance = balance;
+		}
+	}
+
+	public String getCustId() {
+		return custId;
+	}
+
+	public void setCustId(String custId) {
+		this.custId = custId;
+	}
+
+	public String getCustName() {
+		return custName;
+	}
+
+	public void setCustName(String custName) {
+		this.custName = custName;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+
+	public void addBalance(int amount) {
+		if (amount < 1) {
+			System.out.println("금액 오류입니다 :" + amount + "원");
+		} else {
+			this.balance += amount;
+			System.out.println(amount+"원을 입금합니다. "  );
+		}
+	}
+
+	public void substractBalance(int amount) {
+		if (amount < 1) {
+			System.out.println("금액 오류입니다 :" + amount + "원");
+		} else if(amount>balance){
+			System.out.println("출금불가!! 잔고가 부족합니다. "  );
+		}else {
+			this.balance -= amount;
+			System.out.println(amount+"원을 출금합니다. "  );
+		}		
+	}
+
+	public void printAccount() {
+		System.out.println("====================== "  );
+		System.out.println("고객번호 : " + custId  );
+		System.out.println("고객명 : " + custName  );
+		System.out.println("계좌번호 : " + accountNumber  );
+		System.out.println("잔액 : " + balance  );
+		System.out.println("====================== "  );
+	}
+
+}
+
+
+
+package workshop.account;
+
+import java.util.Scanner;
+
+public class TestAccount {
+	
+	public static void main(String[] args) {
+		Account a2 = new Account("CUST01", "소지섭", "1-22-333", 100000);
+		a2.printAccount();//고객정보 출력
+		int menu = 0;//입력 받은  메뉴 값 저장 
+		int amount = 0;  //입력 받은  금액 저장 
+		do {
+			menu = getMenuItem(); //메뉴 입력 받음
+			switch (menu) {
+			case 1:
+				amount = getAccount();//금액 입력받음
+				a2.addBalance(amount);
+				System.out.println("==============");
+				System.out.println("현재 잔액 : " + a2.getBalance());
+				System.out.println("==============");
+				break;
+			case 2:
+				amount = getAccount();
+				a2.substractBalance(amount);
+				System.out.println("==============");
+				System.out.println("현재 잔액 : " + a2.getBalance());
+				System.out.println("==============");
+				break;
+			case 9:
+				System.out.println("Bye~ ");
+				System.exit(0);
+			}
+		} while (menu != 9);
+
+	}
+
+public static int getUserInput() {
+		Scanner input = new Scanner(System.in);
+		int menu = input.nextInt();
+		return menu;
+	}
+	public static int getMenuItem() {
+		System.out.println("[  Menu  ] ");
+		System.out.println("1. 입금");
+		System.out.println("2. 출금 ");
+		System.out.println("9. 종료 ");
+		System.out.print("=> Menu 선택 : ");
+		return getUserInput();
+	}
+	public static int getAccount() {
+		Scanner input = new Scanner(System.in);
+		System.out.print("금액 : ");
+		return getUserInput();
+	}
+
+}
+
+
+상속#################################################
+클래스 관계의 종류 :
+1. is a 관계 : 상속
+2. has a 관계 : 다른 객체를 member field로 설계
+3. use : 사용 (메서드에서 객체 생성해서 필요한 기능 호출해서 사용)
+
+단일상속, extends
+
+base class, super class, parent class <> sub class, child class, derivation class
+
+상속의 장점 : 재사용성, 코드의 간결성 제공,  개발시간 단축
+
+
+class Parent {
+	String name ="parent";
+	public void action() {
+		System.out.println("Parent.action() called");
+	}
+}
+
+class Child extends Parent {
+	
+}
+public class ExtendsEx1 {
+	public static void main(String[] args) {
+		Child c = new Child();
+		System.out.println(c.name);
+		c.action();
+	}
+}
+
+
+※ 자식클래스에서 부모클래스를 참조하기 위해 사용하는 참조변수는 super
+class Parent2 {
+	String name ="parent";	 
+}
+
+class Child2 extends Parent2 {
+	String name ="child";
+	public void method() {
+		String name="local";
+		System.out.println(name);//?
+		System.out.println(this.name);
+		System.out.println(super.name);
+	}
+}
+public class ExtendsEx2 {
+	public static void main(String[] args) {
+		Child2 c = new Child2();
+		c.method();
+	}
+}
+
+#자식클래스의 객체 생성시에 부모 클래스의 default 생성자가 먼저 실행되어 부모객체가 메모리에 생성됨
+class Parent3 {	 
+	Parent3(){
+		System.out.println("Parent3의 default 생성자 호출됨");
+	}
+}
+
+class Child3 extends Parent3 {
+	Child3(){
+		System.out.println("Child3의 default 생성자 호출됨");
+	}
+}
+
+public class ExtendsEx3 {
+	public static void main(String[] args) {
+		Child3 c = new Child3();		 
+	}
+}
+
+
+#자식클래스의 생성자메서드의 첫번째 문장에서 다른 생성자를 호출하지 않으면, 컴파일시에 JDK가 부모클래스의 default 생성자 메서드를 호출하는 코드를 삽입함
+만약 부모클래스에 default 생성자 메서드가 정의되어 있지 않으면 오류 발생함
+해결 방법 1:  부모클래스에 default 생성자 메서드를 정의 (필요하지 않아도)
+해결 방법 2:  자식클래스의 생성자메서드의 첫번째 문장에서 부모클래스에 정의되어 있는 생성자 메서드를 호출 - super()
+
+class Parent4 {	 
+//	Parent4( ){
+//		System.out.println("Parent4( )의  생성자 호출됨");
+//	}
+	Parent4(int num){
+		System.out.println("Parent4(String)의  생성자 호출됨");
+	}
+}
+
+class Child4 extends Parent4 {
+	Child4(){
+		super(1);
+		System.out.println("Child3의 default 생성자 호출됨");
+	}
+}
+
+public class ExtendsEx {
+	public static void main(String[] args) {
+		Child4 c = new Child4();		 
+	}
+}
+
+
+
+#override(재정의) 메서드 :
+부모로부터 상속받은 메서드의 선언을 동일하게 자식클래스에서 선언하고 메서드 내용을 변경할 수 있습니다.
+부모로부터 상속받은 메서드를 override(재정의) 메서드는 1개만 정의할 수 있습니다.
+-AccessModifier는 동일하거나 유효범위가 더 커야 함 (유효범위가 작으면 error)
+- 리턴타입은 반드시 동일해야 합니다. (동일하지 않으면 오류)
+- 메서드이름은 반드시 동일해야 합니다. (메서드이름이 다르면 override메서드가 아님)
+- 파라미터 개수, 순서 , 타입 모두 동일해야 함 (파라미터 개수, 순서 , 타입이 다르면 상속받은 메서드를 overload한 메서드가 됨)
+
+class Parent5 {	 
+	 public void info(String description) {
+		System.out.println("Parent5의 info() 호출됨");
+	}
+}
+
+class Child5 extends Parent5 {
+	public void info(String description ) {//override method
+		System.out.println("Child5에서 상속받은 info()를 version up함");		 
+	}	
+	public void info(String description , String title ) {//overload method
+		System.out.println("Child5에서 상속받은 info()를 version up함");		 
+	}
+}
+
+public class ExtendsEx5 {
+	public static void main(String[] args) {
+		Child5 c = new Child5();	
+		c.info("java");
+		c.info("java", "bit");
+	}
+}
+
+
+#################################################################
+#local변수에는 access modifier, modifier를 선언하지 않습니다. (예외적으로 final만 허용)
+final class : 종단 클래스, 상속 못하도록 할때, 확장 못하도록 할때..
+final method :  override 금지시키기 위한 메서드 설계시 ...
+final variable : 상수 (초기화 후에 변경 불가)
+
+
+final class Parent6 {	 
+}
+
+class Child6 extends Parent6 {	 
+}
+
+class MyMath extends Math{
+	
+}
+public class FinalEx {
+	public static void main(String[] args) {
+		 
+	}
+}
+
+
+
+
+class Parent7 {
+	public final void info() {
+		System.out.println("version 1.0");
+	}
+}
+
+class Child7 extends Parent7 {	
+	public   void info() {
+		System.out.println("version 2.0");
+	}
+}
+
+ 
+public class FinalEx2 {
+	public static void main(String[] args) {
+		 
+	}
+}
+
+
+instanceof 연산자 #########################################
+비교연산자의 결과는 true, false
+객체(reference변수) instanceof  타입(reference Type)
+상속관계가 없는 객체와 타입에 instanceof연산자 사용 불가 (컴파일 오류 발생)
+
+public class Test3 {
+
+	public static void main(String[] args) {
+		Object o = new Object();
+		String s = new String("java");
+		Integer i = new Integer("100");
+		System.out.println(o instanceof Object); //?
+		System.out.println(s instanceof Object); //?
+		System.out.println(o instanceof String);  //?
+		System.out.println(i instanceof String);//?
+	}
+
+}
+
+#부모클래스로부터 상속 안되는 것 : private 멤버필드와 메서드, 생성자
+
+다형성 객체#################################################################
+부모클래스 객체 = new 자식클래스1();
+.......
+객체 = new 자식클래스2()
+.......
+객체 = new 자식클래스3()
+.....
+
+#다형성 객체는 부모에 선언되지 않은 필드와 메서드는 다형성 객체를 Down Casting해야 사용 가능
+#다형성 객체의 access가능한 멤버필드는 선언자 우선
+#다형성 객체의 호출 가능한 메서드는 override 메서드가 우선
+class Parent8 {
+	int  num = 1;
+	int  age = 1;
+	public void method() {
+		System.out.println("parent's method() called");
+	}
+	public void sound() {
+		System.out.println("parent's sound() called");
+	}
+}
+class Child8 extends Parent8 {
+	int  num = 100;
+	int phone = 0;
+	public void method() {//override 메서드
+		System.out.println("child's method() called");
+	}
+	public void dance() {
+		System.out.println("child's dance() called");
+	}	
+}
+public class PolyTest {
+	public static void main(String[] args) {
+		Parent8 p = new Child8();  //다형성 객체
+		System.out.println(p.num);  //멤버필드는 선언자 우선
+		System.out.println(p.age);
+		//System.out.println(p.phone); //error
+		System.out.println(((Child8)p).phone);//Down Casting
+		p.method();// 다형성 객체는 override 메서드가 우선
+		p.sound();
+		//p.dance(); //error
+		((Child8)p).dance();		
+	}
+}
+
+#######################################################################################
+
+import java.util.Arrays;
+import java.util.Random;
+
+public class Lotto {
+   public final static int LOTTO_NUM_CNT = 6;
+   public int[] generateLottoNumbers() {
+	   int[] lottoNumbers = new int[LOTTO_NUM_CNT];
+	   for(int i=0;i<LOTTO_NUM_CNT;i++) {
+		   lottoNumbers[i] = getRandomNumber();
+		   for(int j=0;j<i;j++) {
+			   if(lottoNumbers[j]==lottoNumbers[i]) {
+				   --i;
+			   }
+		   }//inner for end
+	   }//outer for end
+	   return lottoNumbers;
+   }
+   public void displayLottoNumbers(int[] lottoNumbers) {
+	   sortLottoNumbers(lottoNumbers);
+	   System.out.println("\t<<Lotto>>\t");
+	   for (int n : lottoNumbers) {
+		   System.out.print(n+"  ");
+	   }
+   }
+   public void sortLottoNumbers(int[] lottoNumbers) {
+	   Arrays.sort(lottoNumbers);	   
+   }
+   private static int getRandomNumber() {
+	   Random rand = new Random();
+	   int randomNumber = rand.nextInt(45) + 1;
+	   return randomNumber;
+   }   
+}
+
+
+
+
+
+
+public class TestLotto {
+
+	public static void main(String[] args) {
+		Lotto ex = new Lotto();
+		int[] lottoNumbers = ex.generateLottoNumbers();
+		ex.displayLottoNumbers(lottoNumbers);
+
+	}
+
+}
